@@ -59,9 +59,22 @@ class _DriverSignupAdditionalInfoPageState
                       widget.driverFormData.profilePicture = image;
                     });
                   },
+                  // Add asterisk in the label/title if possible in your widget
                 ),
                 const SizedBox(height: 16),
                 // Name field
+                Row(
+                  children: [
+                    Text(
+                      'Name',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      ' *',
+                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
                 TextFormField(
                   controller: widget.driverFormData.nameController,
                   decoration: InputDecoration(
@@ -194,6 +207,13 @@ class _DriverSignupAdditionalInfoPageState
   Widget _buildVehicleDetailsFields() {
     return Column(
       children: [
+        // Vehicle Year (Mandatory)
+        Row(
+          children: [
+            Text('Vehicle Year', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.carYearController,
           decoration: InputDecoration(
@@ -220,6 +240,13 @@ class _DriverSignupAdditionalInfoPageState
           },
         ),
         const SizedBox(height: 16),
+        // Vehicle Plate Number (Mandatory)
+        Row(
+          children: [
+            Text('Vehicle Plate Number', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.carPlateController,
           decoration: InputDecoration(
@@ -246,6 +273,12 @@ class _DriverSignupAdditionalInfoPageState
           },
         ),
         const SizedBox(height: 16),
+        // Vehicle Colour (NOT mandatory)
+        Row(
+          children: [
+            Text('Vehicle Color', style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.carColorController,
           decoration: InputDecoration(
@@ -265,9 +298,7 @@ class _DriverSignupAdditionalInfoPageState
             ),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your vehicle color';
-            }
+            // Not mandatory
             return null;
           },
         ),
@@ -283,32 +314,8 @@ class _DriverSignupAdditionalInfoPageState
         Row(
           children: [
             const SizedBox(width: 16),
-            RichText(
-              text: TextSpan(
-                text: 'DVLA License Check Code',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: ' \u{1F517}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () async {
-                        final url = Uri.parse(
-                            'https://www.gov.uk/view-driving-licence');
-                        if (!await launchUrl(url)) {
-                          throw Exception('Could not launch $url');
-                        }
-                      },
-                  ),
-                ],
-              ),
-            ),
+            Text('DVLA License Check Code', style: TextStyle(fontWeight: FontWeight.bold)),
+            // No asterisk, not mandatory
           ],
         ),
         const SizedBox(height: 8),
@@ -331,9 +338,7 @@ class _DriverSignupAdditionalInfoPageState
             ),
           ),
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your license check code';
-            }
+            // Not mandatory
             return null;
           },
         ),
@@ -345,6 +350,12 @@ class _DriverSignupAdditionalInfoPageState
   Widget _buildBankAccountFields() {
     return Column(
       children: [
+        Row(
+          children: [
+            Text('Bank Account Name', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.accountNameController,
           decoration: InputDecoration(
@@ -371,6 +382,12 @@ class _DriverSignupAdditionalInfoPageState
           },
         ),
         const SizedBox(height: 8),
+        Row(
+          children: [
+            Text('Bank Account Number', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.accountNumberController,
           decoration: InputDecoration(
@@ -397,6 +414,12 @@ class _DriverSignupAdditionalInfoPageState
           },
         ),
         const SizedBox(height: 8),
+        Row(
+          children: [
+            Text('Bank Account Sort Code', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          ],
+        ),
         TextFormField(
           controller: widget.driverFormData.accountSortCodeController,
           decoration: InputDecoration(

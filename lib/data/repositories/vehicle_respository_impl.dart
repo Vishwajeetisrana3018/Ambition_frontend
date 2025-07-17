@@ -39,6 +39,7 @@ class VehicleRespositoryImpl implements VehicleRepository {
   @override
   Future<List<Vehicle>> getVehicles() async {
     final resp = await vehicleRemoteDataSource.getVehicles();
+    print('Response data: ${resp.data}');
     return VehicleModel.fromJsonList(resp.data)
         .map((e) => e.toEntity())
         .toList();

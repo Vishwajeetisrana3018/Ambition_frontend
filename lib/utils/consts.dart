@@ -4,7 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Consts {
   static const baseUrl ='https://ambitionbackend-258e6c7522d2.herokuapp.com/api/';
-  //static const baseUrl = 'http://172.20.10.3:5000/api/';
+  // static const baseUrl = 'http://192.168.1.106:5000/api/';
+  
   static List<AmbitionService> ambitionServices = [
     AmbitionService(
       title: 'Events',

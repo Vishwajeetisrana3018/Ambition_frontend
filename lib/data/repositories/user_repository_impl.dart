@@ -34,6 +34,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<User?> getUser(String id) async {
     final resp = await userRemoteDataSource.getUser(id);
     if (resp.statusCode == 200) {
+      print("objectToJson${resp.data}");
       return UserModel.fromJson(resp.data).toEntity();
     } else {
       return null;

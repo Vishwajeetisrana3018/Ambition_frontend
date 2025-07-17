@@ -135,6 +135,7 @@ class RemoteDataSource {
 
   // Create User Temp OTP
   Future<Response> sendUserTempOtp(Map<String, dynamic> data) async {
+    print('Sending user temp OTP with data: $data');
     final response = await dio.post(
       '${baseUrl}users/temp-otp',
       data: data,

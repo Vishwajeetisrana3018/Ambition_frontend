@@ -179,6 +179,13 @@ class _LoginPageState extends State<LoginPage> {
                 // Login Button
                 LoginButton(
                   onPressed: () {
+          //           if (_selectedItem  == 'Passenger') {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //       context, '/passenger_home', (route) => false);
+          // } else {
+          //   Navigator.pushNamedAndRemoveUntil(
+          //       context, '/driver_home', (route) => false);
+          // }
                     if (_selectedItem == 'Passenger') {
                       if (formKey.currentState!.validate()) {
                         context.read<AuthBloc>().add(SendUserLoginOtpEvent(

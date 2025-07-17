@@ -62,6 +62,7 @@ dependencies:
   app_set_id: ^1.2.1
   google_sign_in: ^7.1.0
   firebase_auth: ^5.6.2
+  geocoding: ^4.0.0
 
 # override dependencies
 dependency_overrides:

@@ -68,7 +68,30 @@ class _PassengerAdditionalInfoPageState
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.1,
                   ),
-                  // Name field
+                  // Name field label
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Name',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   TextFormField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -103,7 +126,30 @@ class _PassengerAdditionalInfoPageState
                   ),
                   const SizedBox(height: 16),
 
-                  // Email field
+                  // Email field label
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Email',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: ' *',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   TextFormField(
                     controller: emailController,
                     decoration: InputDecoration(

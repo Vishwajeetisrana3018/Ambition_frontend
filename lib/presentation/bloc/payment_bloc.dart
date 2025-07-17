@@ -39,20 +39,24 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   }
 
   Future<void> _onInitiateCarAndVehiclePayment(
-    InitiateCarAndVehiclePayment event,
-    Emitter<PaymentState> emit,
-  ) async {
-    emit(PaymentLoading());
-    try {
-      final paymentSheetData = await createPaymentSheet(
-        CreatePaymentSheetParams(amount: event.amount, email: event.email),
-      );
-      await presentPaymentSheet(paymentSheetData);
-      emit(PaymentCarAndVehicleSuccess(paymentSheetData));
-    } on StripeException catch (e) {
-      emit(PaymentFailure(e.error.localizedMessage ?? 'An error occurred'));
-    } catch (e) {
-      emit(PaymentFailure(e.toString()));
-    }
-  }
+   
+  InitiateCarAndVehiclePayment event,
+  Emitter<PaymentState> emit,
+) async {
+   print('Initiating car and vehicle payment...');
+  emit(PaymentLoading());
+
+  print('Starting payment sheet creation...');
+  final paymentSheetData = await createPaymentSheet(
+    CreatePaymentSheetParams(amount: event.amount, email: event.email),
+  );
+  print('Payment sheet data created: $paymentSheetData');
+
+  print('Presenting payment sheet...');
+  await presentPaymentSheet(paymentSheetData);
+  print('Payment sheet presented successfully.');
+
+  emit(PaymentCarAndVehicleSuccess(paymentSheetData));
+}
+
 }
