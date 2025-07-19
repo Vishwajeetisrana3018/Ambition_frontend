@@ -123,6 +123,7 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                     onTap: () {
                       if (selectedService != null) {
                         if (selectedService!.isEvent) {
+                          print("Event service selected");
                           Navigator.of(context).pushNamed(
                             '/event_item_selection',
                             arguments: {
@@ -133,6 +134,8 @@ class _ServiceSelectionScreenState extends State<ServiceSelectionScreen> {
                             },
                           );
                         } else {
+                          print("Item service selected");
+                          
                           Navigator.of(context).pushNamed(
                             '/item_selection',
                             arguments: {

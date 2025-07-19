@@ -15,6 +15,30 @@ class Item {
     required this.weight,
   });
 
+  // Factory constructor to safely build from JSON/map
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      length: json['length'] ?? 0,
+      width: json['width'] ?? 0,
+      height: json['height'] ?? 0,
+      weight: json['weight'] ?? 0,
+    );
+  }
+
+  // Convert object to JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'length': length,
+      'width': width,
+      'height': height,
+      'weight': weight,
+    };
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

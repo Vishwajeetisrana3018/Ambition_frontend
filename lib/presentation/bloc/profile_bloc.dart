@@ -30,54 +30,54 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<DeleteProfile>(_onDeleteProfile);
   }
 
-  // void _onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {
-  //   print("GetProfile event triggered");
-  //   try {
+  void _onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {
+    print("GetProfile event triggered");
+    try {
 
-  //     print("Fetching user profile...");
-  //     emit(ProfileLoading());
-  //     final lcoalUser = getLocalUser();
-  //     final user = await getUser(lcoalUser!['id']??"67d9c23be2bafa71313e2439");
-  //     if (user != null) {
-  //       print("User fetched: ${user.name}");
-  //       emit(ProfileLoaded(user: user));
-  //     } else {
-  //       print("User not found");
-  //       emit(const ProfileError('Failed to load user'));
-  //     }
-  //   } on DioException catch (e) {
-  //     print("DioException occurred: ${e.message}");
-  //     if (e.response != null) {
+      print("Fetching user profile...");
+      emit(ProfileLoading());
+      final lcoalUser = getLocalUser();
+      final user = await getUser(lcoalUser!['id']);
+      if (user != null) {
+        print("User fetched: ${user.name}");
+        emit(ProfileLoaded(user: user));
+      } else {
+        print("User not found");
+        emit(const ProfileError('Failed to load user'));
+      }
+    } on DioException catch (e) {
+      print("DioException occurred: ${e.message}");
+      if (e.response != null) {
 
-  //       emit(ProfileError(e.response!.data.toString()));
-  //     } else {
-  //       emit(ProfileError(e.message ?? 'An error occurred'));
-  //     }
-  //   } catch (e) {
-  //     emit(ProfileError(e.toString()));
-  //   }
-  // }
-void _onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {
-  print("GetProfile event triggered");
-
-  print("Fetching user profile...");
-  emit(ProfileLoading());
-
-  // Fetch local user
-  final localUser = getLocalUser();
-  final userId = localUser?['id'] ?? "67d9c23be2bafa71313e2439"; // Use default ID if none found
-
-  final user = await getUser(userId);
-  print("Response: $user");  // Print the full response
-
-  if (user != null) {
-    print("User fetched: ${user.name}");
-    emit(ProfileLoaded(user: user));
-  } else {
-    print("User not found");
-    emit(const ProfileError('Failed to load user'));
+        emit(ProfileError(e.response!.data.toString()));
+      } else {
+        emit(ProfileError(e.message ?? 'An error occurred'));
+      }
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
   }
-}
+// void _onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {
+//   print("GetProfile event triggered");
+
+//   print("Fetching user profile...");
+//   emit(ProfileLoading());
+
+//   // Fetch local user
+//   final localUser = getLocalUser();
+//   final userId = localUser?['id'] ; 
+
+//   final user = await getUser(userId);
+//   print("Response: $user");  // Print the full response
+
+//   if (user != null) {
+//     print("User fetched: ${user.name}");
+//     emit(ProfileLoaded(user: user));
+//   } else {
+//     print("User not found");
+//     emit(const ProfileError('Failed to load user'));
+//   }
+// }
 
   void _onUpdateProfile(UpdateProfile event, Emitter<ProfileState> emit) async {
     try {

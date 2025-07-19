@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:ambition_delivery/data/models/instruction_model.dart';
@@ -213,83 +215,186 @@ class RemoteDataSource {
     return response;
   }
 
-  Future<Response> createDriver(Map<String, dynamic> driver) async {
-    FormData formData = FormData.fromMap({
-      'name': driver['name'],
-      'email': driver['email'],
-      'password': driver['password'],
-      'phone': driver['phone'],
-      "latitude": driver['latitude'],
-      "longitude": driver['longitude'],
-      "vehicleCategory": driver['vehicleCategory'],
-      "licenseCheckCode": driver['licenseCheckCode'],
-      "accountName": driver['accountName'],
-      "accountNumber": driver['accountNumber'],
-      "accountSortCode": driver['accountSortCode'],
-      "carMake": driver['carMake'],
-      "carModel": driver['carModel'],
-      "carYear": driver['carYear'],
-      "carPlate": driver['carPlate'],
-      "carColor": driver['carColor'],
-      'profile': MultipartFile.fromFileSync(driver['profile'].path,
-          filename: driver['profile'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      'driverLicenseFront': MultipartFile.fromFileSync(
-          driver['driverLicenseFront'].path,
-          filename: driver['driverLicenseFront'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      'driverLicenseBack': MultipartFile.fromFileSync(
-          driver['driverLicenseBack'].path,
-          filename: driver['driverLicenseBack'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "licensePlatePicture": MultipartFile.fromFileSync(
-          driver['licensePlatePicture'].path,
-          filename: driver['licensePlatePicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "vehicleFrontPicture": MultipartFile.fromFileSync(
-          driver['vehicleFrontPicture'].path,
-          filename: driver['vehicleFrontPicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "vehicleBackPicture": MultipartFile.fromFileSync(
-          driver['vehicleBackPicture'].path,
-          filename: driver['vehicleBackPicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "vehicleLeftPicture": MultipartFile.fromFileSync(
-          driver['vehicleLeftPicture'].path,
-          filename: driver['vehicleLeftPicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "vehicleRightPicture": MultipartFile.fromFileSync(
-          driver['vehicleRightPicture'].path,
-          filename: driver['vehicleRightPicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "vehicleInsurancePicture": MultipartFile.fromFileSync(
-          driver['vehicleInsurancePicture'].path,
-          filename: driver['vehicleInsurancePicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      "publicLiabilityInsurancePicture": MultipartFile.fromFileSync(
-          driver['publicLiabilityInsurancePicture'].path,
-          filename:
-              driver['publicLiabilityInsurancePicture'].path.split('/').last,
-          contentType: MediaType('image', 'jpeg')),
-      if (driver['goodsInTransitInsurancePicture'] != null)
-        'goodsInTransitInsurancePicture': MultipartFile.fromFileSync(
-            driver['goodsInTransitInsurancePicture'].path,
-            filename:
-                driver['goodsInTransitInsurancePicture'].path.split('/').last,
-            contentType: MediaType('image', 'jpeg')),
-      if (driver['pcoLicensePicture'] != null)
-        'pcoLicensePicture': MultipartFile.fromFileSync(
-            driver['pcoLicensePicture'].path,
-            filename: driver['pcoLicensePicture'].path.split('/').last,
-            contentType: MediaType('image', 'jpeg')),
-    });
 
-    final response = await dio.post(
-      '${baseUrl}drivers',
-      data: formData,
-    );
-    return response;
+Future<Response> createDriver(Map<String, dynamic> driver) async {
+  FormData formData = FormData.fromMap({
+    'name': driver['name'],
+    'email': driver['email'],
+    'password': driver['password'],
+    'phone': driver['phone'],
+    "latitude": driver['latitude'],
+    "longitude": driver['longitude'],
+    "vehicleCategory": driver['vehicleCategory'],
+    "licenseCheckCode": driver['licenseCheckCode'],
+    "accountName": driver['accountName'],
+    "accountNumber": driver['accountNumber'],
+    "accountSortCode": driver['accountSortCode'],
+    "carMake": driver['carMake'],
+    "carModel": driver['carModel'],
+    "carYear": driver['carYear'],
+    "carPlate": driver['carPlate'],
+    "carColor": driver['carColor'],
+    'profile': MultipartFile.fromFileSync(driver['profile'].path,
+        filename: driver['profile'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    'driverLicenseFront': MultipartFile.fromFileSync(
+        driver['driverLicenseFront'].path,
+        filename: driver['driverLicenseFront'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    'driverLicenseBack': MultipartFile.fromFileSync(
+        driver['driverLicenseBack'].path,
+        filename: driver['driverLicenseBack'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "licensePlatePicture": MultipartFile.fromFileSync(
+        driver['licensePlatePicture'].path,
+        filename: driver['licensePlatePicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "vehicleFrontPicture": MultipartFile.fromFileSync(
+        driver['vehicleFrontPicture'].path,
+        filename: driver['vehicleFrontPicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "vehicleBackPicture": MultipartFile.fromFileSync(
+        driver['vehicleBackPicture'].path,
+        filename: driver['vehicleBackPicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "vehicleLeftPicture": MultipartFile.fromFileSync(
+        driver['vehicleLeftPicture'].path,
+        filename: driver['vehicleLeftPicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "vehicleRightPicture": MultipartFile.fromFileSync(
+        driver['vehicleRightPicture'].path,
+        filename: driver['vehicleRightPicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "vehicleInsurancePicture": MultipartFile.fromFileSync(
+        driver['vehicleInsurancePicture'].path,
+        filename: driver['vehicleInsurancePicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    "publicLiabilityInsurancePicture": MultipartFile.fromFileSync(
+        driver['publicLiabilityInsurancePicture'].path,
+        filename: driver['publicLiabilityInsurancePicture'].path.split('/').last,
+        contentType: MediaType('image', 'jpeg')),
+    if (driver['goodsInTransitInsurancePicture'] != null)
+      'goodsInTransitInsurancePicture': MultipartFile.fromFileSync(
+          driver['goodsInTransitInsurancePicture'].path,
+          filename: driver['goodsInTransitInsurancePicture'].path.split('/').last,
+          contentType: MediaType('image', 'jpeg')),
+    if (driver['pcoLicensePicture'] != null)
+      'pcoLicensePicture': MultipartFile.fromFileSync(
+          driver['pcoLicensePicture'].path,
+          filename: driver['pcoLicensePicture'].path.split('/').last,
+          contentType: MediaType('image', 'jpeg')),
+  });
+
+  // Build a simulated JSON-like request for logging
+  Map<String, dynamic> simulatedRequestBody = {};
+
+  // Add text fields
+  for (var field in formData.fields) {
+    simulatedRequestBody[field.key] = field.value;
   }
+
+  // Add files with metadata
+  for (var file in formData.files) {
+    simulatedRequestBody[file.key] = {
+      'filename': file.value.filename,
+      'contentType': file.value.contentType.toString(),
+    };
+  }
+
+  // Pretty print as JSON using Flutter's `log`
+  final encoder = JsonEncoder.withIndent('  ');
+  final prettyBody = encoder.convert(simulatedRequestBody);
+  log('Sending driver creation request:\n$prettyBody', name: 'createDriver');
+
+  // Send the request
+  final response = await dio.post(
+    '${baseUrl}drivers',
+    data: formData,
+  );
+
+  return response;
+}
+
+
+
+
+//   Future<Response> createDriver(Map<String, dynamic> driver) async {
+//     FormData formData = FormData.fromMap({
+//       'name': driver['name'],
+//       'email': driver['email'],
+//       'password': driver['password'],
+//       'phone': driver['phone'],
+//       "latitude": driver['latitude'],
+//       "longitude": driver['longitude'],
+//       "vehicleCategory": driver['vehicleCategory'],
+//       "licenseCheckCode": driver['licenseCheckCode'],
+//       "accountName": driver['accountName'],
+//       "accountNumber": driver['accountNumber'],
+//       "accountSortCode": driver['accountSortCode'],
+//       "carMake": driver['carMake'],
+//       "carModel": driver['carModel'],
+//       "carYear": driver['carYear'],
+//       "carPlate": driver['carPlate'],
+//       "carColor": driver['carColor'],
+//       'profile': MultipartFile.fromFileSync(driver['profile'].path,
+//           filename: driver['profile'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       'driverLicenseFront': MultipartFile.fromFileSync(
+//           driver['driverLicenseFront'].path,
+//           filename: driver['driverLicenseFront'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       'driverLicenseBack': MultipartFile.fromFileSync(
+//           driver['driverLicenseBack'].path,
+//           filename: driver['driverLicenseBack'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "licensePlatePicture": MultipartFile.fromFileSync(
+//           driver['licensePlatePicture'].path,
+//           filename: driver['licensePlatePicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "vehicleFrontPicture": MultipartFile.fromFileSync(
+//           driver['vehicleFrontPicture'].path,
+//           filename: driver['vehicleFrontPicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "vehicleBackPicture": MultipartFile.fromFileSync(
+//           driver['vehicleBackPicture'].path,
+//           filename: driver['vehicleBackPicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "vehicleLeftPicture": MultipartFile.fromFileSync(
+//           driver['vehicleLeftPicture'].path,
+//           filename: driver['vehicleLeftPicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "vehicleRightPicture": MultipartFile.fromFileSync(
+//           driver['vehicleRightPicture'].path,
+//           filename: driver['vehicleRightPicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "vehicleInsurancePicture": MultipartFile.fromFileSync(
+//           driver['vehicleInsurancePicture'].path,
+//           filename: driver['vehicleInsurancePicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       "publicLiabilityInsurancePicture": MultipartFile.fromFileSync(
+//           driver['publicLiabilityInsurancePicture'].path,
+//           filename:
+//               driver['publicLiabilityInsurancePicture'].path.split('/').last,
+//           contentType: MediaType('image', 'jpeg')),
+//       if (driver['goodsInTransitInsurancePicture'] != null)
+//         'goodsInTransitInsurancePicture': MultipartFile.fromFileSync(
+//             driver['goodsInTransitInsurancePicture'].path,
+//             filename:
+//                 driver['goodsInTransitInsurancePicture'].path.split('/').last,
+//             contentType: MediaType('image', 'jpeg')),
+//       if (driver['pcoLicensePicture'] != null)
+//         'pcoLicensePicture': MultipartFile.fromFileSync(
+//             driver['pcoLicensePicture'].path,
+//             filename: driver['pcoLicensePicture'].path.split('/').last,
+//             contentType: MediaType('image', 'jpeg')),
+//     });
+//  print('Creating driver with data: $formData');
+//     final response = await dio.post(
+//       '${baseUrl}drivers',
+//       data: formData,
+//     );
+//     return response;
+//   }
 
   Future<Response> updateDriver(String id, Map<String, dynamic> driver) async {
     FormData formData = FormData.fromMap({});
