@@ -5,9 +5,12 @@ import 'package:ambition_delivery/domain/entities/location_entity.dart';
 import 'package:ambition_delivery/domain/entities/polyline_point_entity.dart';
 import 'package:ambition_delivery/domain/entities/ride_request.dart';
 import 'package:ambition_delivery/presentation/bloc/auth_bloc.dart';
+import 'package:ambition_delivery/presentation/bloc/repeat_job_event.dart';
 import 'package:ambition_delivery/presentation/bloc/ride_request_bloc.dart';
 import 'package:ambition_delivery/presentation/bloc/socket_bloc.dart';
 import 'package:ambition_delivery/presentation/bloc/socket_state.dart';
+import 'package:ambition_delivery/presentation/bloc/repeat_job_bloc.dart';
+import 'package:ambition_delivery/presentation/bloc/repeat_job_state.dart';
 import 'package:ambition_delivery/presentation/widgets/ride_details_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,6 +70,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
     BlocProvider.of<RideRequestBloc>(context)
         .add(GetOngoingRideRequestByDriverIdEvent());
     _socketBloc.subscribeToEvents(_authBloc.currentUserId);
+    // Fetch scheduled moves
+    BlocProvider.of<RepeatJobBloc>(context).add(GetRepeatJobsEvent());
   }
 
   @override
@@ -236,9 +241,84 @@ class _DriverMainPageState extends State<DriverMainPage> {
             // When no ongoing ride exists, fetch pending ride requests
             BlocProvider.of<RideRequestBloc>(context)
                 .add(GetPendingRideRequestsByDriverCarCategoryEvent());
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
+            // Show scheduled moves section only, do NOT access state.rideRequests here
+            return Scaffold(
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    BlocBuilder<RepeatJobBloc, RepeatJobState>(
+                      builder: (context, repeatJobState) {
+                        if (repeatJobState is RepeatJobLoading) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        } else if (repeatJobState is RepeatJobLoaded && repeatJobState.jobs.isNotEmpty) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                child: Text(
+                                  'Scheduled Move(s)',
+                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    side: BorderSide(color: Colors.grey.shade300, width: 1),
+                                  ),
+                                  elevation: 0,
+                                  child: ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: repeatJobState.jobs.length,
+                                    separatorBuilder: (context, idx) => Divider(height: 1, color: Colors.grey.shade200),
+                                    itemBuilder: (context, idx) {
+                                      final job = repeatJobState.jobs[idx];
+                                      return ListTile(
+                                        leading: Icon(Icons.local_shipping, size: 36, color: Colors.blueGrey),
+                                        title: Text(job.moveType, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('${job.originName} → ${job.destinationName}', maxLines: 1, overflow: TextOverflow.ellipsis),
+                                            Text('Scheduled: ${job.jobType}'),
+                                            Text('Date: ${job.originLat != null ? DateTime.now().toString().substring(0, 10) : ''}'), // Replace with actual date if available
+                                          ],
+                                        ),
+                                        trailing: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            if (job.passengersCount != null)
+                                              Text('x${job.passengersCount}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                                            // Add fare if available
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        } else if (repeatJobState is RepeatJobLoaded && repeatJobState.jobs.isEmpty) {
+                          return const SizedBox();
+                        } else if (repeatJobState is RepeatJobError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text('Failed to load scheduled moves: ${repeatJobState.message}', style: TextStyle(color: Colors.red)),
+                          );
+                        } else {
+                          return const SizedBox();
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             );
           } else if (state is PendingRideRequestsLoaded) {

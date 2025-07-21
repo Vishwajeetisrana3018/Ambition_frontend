@@ -400,37 +400,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(OtpFailed(error: e.toString()));
     }
   }
+
   Future<void> _onSendDriverTempOtp(
-    SendDriverTempOtpEvent event, Emitter<AuthState> emit) async {
-  print("Sending driver temp OTP...");
-  emit(AuthLoading());
-
-  print("OTP data: ${event.otp}");
-
-  final result = await sendDriverTempOtpUsecase(event.otp);
-
-  print("OTP sent result: $result");
-
-  emit(DriverTempOtpSent());
-}
-
-
-  // Future<void> _onSendDriverTempOtp(
-  //     SendDriverTempOtpEvent event, Emitter<AuthState> emit) async {
-  //   emit(AuthLoading());
-  //   try {
-  //     await sendDriverTempOtpUsecase(event.otp);
-  //     emit(DriverTempOtpSent());
-  //   } on DioException catch (e) {
-  //     if (e.response != null) {
-  //       emit(AuthFailure(error: e.response!.data.toString()));
-  //     } else {
-  //       emit(AuthFailure(error: e.message ?? 'An error occurred'));
-  //     }
-  //   } catch (e) {
-  //     emit(AuthFailure(error: e.toString()));
-  //   }
-  // }
+      SendDriverTempOtpEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await sendDriverTempOtpUsecase(event.otp);
+      emit(DriverTempOtpSent());
+    } on DioException catch (e) {
+      if (e.response != null) {
+        emit(AuthFailure(error: e.response!.data.toString()));
+      } else {
+        emit(AuthFailure(error: e.message ?? 'An error occurred'));
+      }
+    } catch (e) {
+      emit(AuthFailure(error: e.toString()));
+    }
+  }
 
   Future<void> _onResendDriverTempOtp(
       ResendDriverTempOtpEvent event, Emitter<AuthState> emit) async {
@@ -726,46 +712,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFailure(error: e.toString()));
     }
   }
-Future<void> _onSendUserTempOtp(
-    SendUserTempOtpEvent event, Emitter<AuthState> emit) async {
-  emit(AuthLoading());
 
-  await sendUserTempOtpUsecase(event.otp).then((_) {
-    print('OTP sent successfully');
-    emit(UserTempOtpSent());
-  }).catchError((error) {
-    // Check if error is a DioException for detailed info
-    if (error is DioException) {
-      if (error.response != null) {
-        print('Error response data: ${error.response!.data}');
-        emit(AuthFailure(error: error.response!.data.toString()));
+  Future<void> _onSendUserTempOtp(
+      SendUserTempOtpEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await sendUserTempOtpUsecase(event.otp);
+      emit(UserTempOtpSent());
+    } on DioException catch (e) {
+      if (e.response != null) {
+        emit(AuthFailure(error: e.response!.data.toString()));
       } else {
-        print('Dio error message: ${error.message}');
-        emit(AuthFailure(error: error.message ?? 'An error occurred'));
+        emit(AuthFailure(error: e.message ?? 'An error occurred'));
       }
-    } else {
-      print('Unexpected error: $error');
-      emit(AuthFailure(error: error.toString()));
+    } catch (e) {
+      emit(AuthFailure(error: e.toString()));
     }
-  });
-}
-
-  // Future<void> _onSendUserTempOtp(
-  //     SendUserTempOtpEvent event, Emitter<AuthState> emit) async {
-  //   emit(AuthLoading());
-  //   try {
-  //     await sendUserTempOtpUsecase(event.otp);
-  //     emit(UserTempOtpSent());
-  //   } on DioException catch (e) {
-  //     if (e.response != null) {
-  //       emit(AuthFailure(error: e.response!.data.toString()));
-  //     } else {
-  //       emit(AuthFailure(error: e.message ?? 'An error occurred'));
-  //     }
-  //   } catch (e) {
-  //     emit(AuthFailure(error: e.toString()));
-  //   }
-  // }
+  }
 
   Future<void> _onVerifyUserTempOtp(
       VerifyUserTempOtpEvent event, Emitter<AuthState> emit) async {
