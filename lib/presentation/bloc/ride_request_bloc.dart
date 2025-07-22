@@ -190,6 +190,8 @@ class RideRequestBloc extends Bloc<RideRequestEvent, RideRequestState> {
       emit(RideRequestLoading());
       final user = getLocalUser();
       final rideRequest = await getOngoingRideRequestByUserId(user!['id']);
+      print('DEBUG: API rideRequest: '
+          '${rideRequest != null ? rideRequest.toString() : 'null'}');
       if (rideRequest != null) {
         Set<Polyline> polylines = {};
         polylines.add(
@@ -208,58 +210,70 @@ class RideRequestBloc extends Bloc<RideRequestEvent, RideRequestState> {
 
         if (rideRequest.carDriverId != null) {
           carDriverLocation = await getDriverLocation(rideRequest.carDriverId!);
-          final polylinePoints = await getPolylinePoints({
-            'origin': [
-              carDriverLocation!.coordinates[0],
-              carDriverLocation.coordinates[1]
-            ],
-            'destination': [
-              rideRequest.pickupLocation.coordinates[0],
-              rideRequest.pickupLocation.coordinates[1]
-            ]
-          });
-          polylines.add(
-            Polyline(
-              polylineId: const PolylineId("car_driver_to_pickup"),
-              points: polylinePoints
-                  .map((point) =>
-                      LatLng(point.lat.toDouble(), point.lng.toDouble()))
-                  .toList(),
-              color: Colors.green,
-              width: 5,
-            ),
-          );
+          try {
+            final polylinePoints = await getPolylinePoints({
+              'origin': [
+                carDriverLocation!.coordinates[0],
+                carDriverLocation.coordinates[1]
+              ],
+              'destination': [
+                rideRequest.pickupLocation.coordinates[0],
+                rideRequest.pickupLocation.coordinates[1]
+              ]
+            });
+            polylines.add(
+              Polyline(
+                polylineId: const PolylineId("car_driver_to_pickup"),
+                points: polylinePoints
+                    .map((point) =>
+                        LatLng(point.lat.toDouble(), point.lng.toDouble()))
+                    .toList(),
+                color: Colors.green,
+                width: 5,
+              ),
+            );
+          } catch (e) {
+            print('DEBUG: Polyline API failed for car driver: $e');
+          }
         }
 
         if (rideRequest.driverId != null) {
           final driverLocation = await getDriverLocation(rideRequest.driverId!);
-          final polylinePoints = await getPolylinePoints({
-            'origin': [
-              driverLocation!.coordinates[0],
-              driverLocation.coordinates[1]
-            ],
-            'destination': [
-              rideRequest.pickupLocation.coordinates[0],
-              rideRequest.pickupLocation.coordinates[1]
-            ]
-          });
-          polylines.add(
-            Polyline(
-              polylineId: const PolylineId("driver_to_pickup"),
-              points: polylinePoints
-                  .map((point) =>
-                      LatLng(point.lat.toDouble(), point.lng.toDouble()))
-                  .toList(),
-              color: Colors.green,
-              width: 5,
-            ),
-          );
+          try {
+            final polylinePoints = await getPolylinePoints({
+              'origin': [
+                driverLocation!.coordinates[0],
+                driverLocation.coordinates[1]
+              ],
+              'destination': [
+                rideRequest.pickupLocation.coordinates[0],
+                rideRequest.pickupLocation.coordinates[1]
+              ]
+            });
+            polylines.add(
+              Polyline(
+                polylineId: const PolylineId("driver_to_pickup"),
+                points: polylinePoints
+                    .map((point) =>
+                        LatLng(point.lat.toDouble(), point.lng.toDouble()))
+                    .toList(),
+                color: Colors.green,
+                width: 5,
+              ),
+            );
+          } catch (e) {
+            print('DEBUG: Polyline API failed for driver: $e');
+          }
+          print(
+              'DEBUG: Emitting OnGoingUserRideRequestLoaded with driverPosition and carDriverPosition');
           emit(OnGoingUserRideRequestLoaded(
               rideRequest: rideRequest,
               driverPosition: driverLocation,
               carDriverPosition: carDriverLocation,
               polylines: polylines));
         } else {
+          print(
+              'DEBUG: Emitting OnGoingUserRideRequestLoaded with only carDriverPosition');
           emit(OnGoingUserRideRequestLoaded(
               rideRequest: rideRequest,
               driverPosition: null,
@@ -267,6 +281,7 @@ class RideRequestBloc extends Bloc<RideRequestEvent, RideRequestState> {
               polylines: polylines));
         }
       } else {
+        print('DEBUG: No ongoing ride request found');
         emit(NoOngoingRideRequest());
       }
     } on DioException catch (e) {

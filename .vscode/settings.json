@@ -1,3 +1,4 @@
 {
-    "breadcrumbs.enabled": true
+    "breadcrumbs.enabled": true,
+    "dart.flutterSdkPath": "D:\\Softwares\\flutter 3.19.5"
 }

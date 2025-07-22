@@ -48,11 +48,11 @@ class RideRequestModel extends RideRequest {
       passengersCount: json['passengersCount'],
       pickupLocation: LocationModel.fromJson(json['pickupLocation']),
       dropoffLocation: LocationModel.fromJson(json['dropoffLocation']),
-      polyline: json['polylinePoints'].runtimeType == String
-          ? []
-          : (json['polylinePoints'] as List)
+      polyline: (json['polylinePoints'] is List)
+          ? (json['polylinePoints'] as List)
               .map((e) => PolylinePointModel.fromJson(e))
-              .toList(),
+              .toList()
+          : [],
       distance: json['distance'],
       time: json['time'],
       fare: RideFareModel.fromJson(json['fare']),

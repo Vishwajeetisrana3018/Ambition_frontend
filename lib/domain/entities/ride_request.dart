@@ -6,6 +6,14 @@ import 'package:ambition_delivery/domain/entities/polyline_point_entity.dart';
 import 'package:ambition_delivery/domain/entities/ride_fare.dart';
 
 class RideRequest {
+  @override
+  String toString() {
+    return 'RideRequest(id: '
+        '[32m$id[0m, user: $user, driverId: $driverId, carDriverId: $carDriverId, status: $status, '
+        'pickupLocation: $pickupLocation, dropoffLocation: $dropoffLocation, polyline.length: ${polyline.length}, '
+        'distance: $distance, time: $time, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
+
   final String id;
   final String user;
   final String? driverId;
