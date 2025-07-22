@@ -60,9 +60,11 @@ dependencies:
   firebase_core: ^3.13.0
   firebase_messaging: ^15.2.5
   app_set_id: ^1.2.1
-  google_sign_in: ^7.1.0
+  google_sign_in: ^6.1.0
   firebase_auth: ^5.6.2
   geocoding: ^4.0.0
+  flutter_rating_bar: ^4.0.1
+  sign_in_with_apple: ^7.0.1
 
 # override dependencies
 dependency_overrides:
